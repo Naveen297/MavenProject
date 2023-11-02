@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        NETLIFY_SITE_ID = '9c0d523b-4056-4de7-88ec-8c220290a27b'
+        // Don't put your actual token here. Set it in Jenkins' environment variables.
+        NETLIFY_AUTH_TOKEN = 'HPPeIQj1EP2aur9lPny96FheKqZV5eTNbjQlpWn4Ii4'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -9,14 +15,12 @@ pipeline {
         }
 
         stage('Lint HTML') {
-    steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            sh 'tidy -q -e public/*.html'
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'tidy -q -e public/*.html'
+                }
+            }
         }
-    }
-}
-
-
 
         stage('Package') {
             steps {
@@ -28,14 +32,13 @@ pipeline {
         stage('Deploy to Netlify') {
             steps {
                 script {
-                    // // Set NETLIFY_SITE_ID and NETLIFY_AUTH_TOKEN as environment variables in Jenkins
-                    // sh '''
-                    // curl -H "Content-Type: application/zip" \
-                    //      -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-                    //      --data-binary "@website.zip" \
-                    //      https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys
-                    // '''
-                    echo "deployed ok"
+                    def response = sh(script: """
+                    curl -H "Content-Type: application/zip" \\
+                         -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \\
+                         --data-binary "@website.zip" \\
+                         https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}/deploys
+                    """, returnStdout: true).trim()
+                    echo "Netlify Response: $response"
                 }
             }
         }
@@ -43,7 +46,7 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment succeeded!'
+            echo 'Deployed successfully!'
         }
         failure {
             echo 'Deployment failed.'
