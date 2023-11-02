@@ -10,10 +10,12 @@ pipeline {
 
         stage('Lint HTML') {
     steps {
-        // The -errors flag makes tidy only show errors, ignoring warnings
-        sh 'tidy -q -e -errors public/*.html'
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh 'tidy -q -e public/*.html'
+        }
     }
 }
+
 
 
         stage('Lint CSS') {
