@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         NETLIFY_SITE_ID = '9c0d523b-4056-4de7-88ec-8c220290a27b'
-        // Don't put your actual token here. Set it in Jenkins' environment variables.
         NETLIFY_AUTH_TOKEN = 'HPPeIQj1EP2aur9lPny96FheKqZV5eTNbjQlpWn4Ii4'
     }
 
@@ -55,6 +54,40 @@ pipeline {
 }
 
 
+
+// pipeline {
+//     agent any
+
+//     tools {
+//         maven 'Maven_3.6.3' // Replace 'Maven_3.6.3' with the name of your Maven installation in Jenkins if different
+//     }
+
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 checkout scm
+//             }
+//         }
+        
+//         stage('Build') {
+//             steps {
+//                 sh 'mvn clean compile'
+//             }
+//         }
+        
+//         stage('Test') {
+//             steps {
+//                 sh 'mvn test'
+//             }
+//         }
+
+//         stage('Package') {
+//             steps {
+//                 sh 'mvn package'
+//             }
+//         }
+//     }
+// }
 
 // pipeline {
 //     agent any
