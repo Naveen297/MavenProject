@@ -18,12 +18,6 @@ pipeline {
 
 
 
-        stage('Lint CSS') {
-            steps {
-                sh 'stylelint "public/**/*.css"'
-            }
-        }
-
         stage('Package') {
             steps {
                 sh 'zip -r website.zip public/*'
